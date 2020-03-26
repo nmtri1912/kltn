@@ -1,28 +1,32 @@
-import numpy as np
+datapath = "data/train-en-vi/"
 
-# Vocabulary of English
-all_eng_words=set()
-for eng in lines.eng:
-    for word in eng.split():
-        if word not in all_eng_words:
-            all_eng_words.add(word)
+with open(datapath+"train.en", 'r', encoding='utf-8') as f:
+    linesEN = f.read().split('\n')
 
-# Vocabulary of VietNamese
-all_vi_words=set()
-for vi in lines.vi:
-    for word in vi.split():
-        if word not in all_marathi_words:
-            all_vi_words.add(word)
+with open(datapath+"train.vi", 'r', encoding='utf-8') as f:
+    linesVI = f.read().split('\n')
 
+input_texts = []
+target_texts = []
+input_characters = set()
+target_characters = set()
+#sample
+num_samples = 10000
 
-# Max Length of source sequence
-lenght_list=[]
-for l in lines.eng:
-    lenght_list.append(len(l.split(' ')))
-max_length_src = np.max(lenght_list)
+#
+for line in linesEN[: min(num_samples, len(linesEN) - 1)]:
+    input_text = line
+    input_texts.append(input_text)
+    for char in input_text:
+        if char not in input_characters:
+            input_characters.add(char)
 
-# Max Length of target sequence
-lenght_list=[]
-for l in lines.vi:
-    lenght_list.append(len(l.split(' ')))
-max_length_tar = np.max(lenght_list)
+for line in linesVI[: min(num_samples, len(linesVI) - 1)]:
+    target_text = '\t' + line + '\n'
+    target_texts.append(target_text)
+    for char in target_text:
+        if char not in target_characters:
+            target_characters.add(char)
+
+print(input_texts[155])
+print(target_texts[155])
