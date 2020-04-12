@@ -34,7 +34,7 @@ for line in linesEN:
         lenData = len(line)
 
 for line in linesEN:
-    if len(line) == lenData or len(line) >= 1000:
+    if len(line) == lenData or len(line) >= 700:
         print(count)
     count+=1
 
