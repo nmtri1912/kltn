@@ -8,9 +8,10 @@ from keras.models import load_model
 from flask import Flask, render_template, request, jsonify
 import tensorflow as tf
 from tensorflow import keras
+from flask_cors import CORS
 
-app = Flask('stock_pricer')
-
+app = Flask('translate')
+CORS(app)
 # -----
 
 tb._SYMBOLIC_SCOPE.value = True
@@ -131,11 +132,15 @@ def results():
 def translate():
     # print(request.form['input'])
     # return {'message': 'fail to request'}, 200
+    print('\n**************************\n')
+    print(request.json.get('input'))
+    print('\n**************************\n')
     if request.method == 'POST':
         with sess.as_default():
             with graph.as_default():
                 model = tf.keras.models.load_model("model.h5")
-                inputGerman = request.form['input']
+                inputGerman = request.json.get('input')
+                print(inputGerman)
                 tk2 = create_tokenizer(inputGerman)
                 inputGerman = inputGerman.split(" ")
                 predicted = str()
