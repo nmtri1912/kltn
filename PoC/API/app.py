@@ -20,12 +20,9 @@ tb._SYMBOLIC_SCOPE.value = True
 sess = tf.compat.v1.Session()
 graph = tf.compat.v1.get_default_graph()
 
-# model.summary()
-
-# clean data
-
-
 # load a clean dataset
+
+
 def load_clean_sentences(filename):
     return load(open(filename, 'rb'))
 
@@ -99,59 +96,33 @@ def predict_sequence(model, tokenizer, source):
 @app.route('/')
 def show_predict_stock_form():
     # return render_template('predictorform.html')
-    return render_template('try.html')
-    # return "hello"
-
-
-@app.route('/result', methods=['POST'])
-def results():
-    form = request.form
-    if request.method == 'POST':
-        with sess.as_default():
-            with graph.as_default():
-                model = tf.keras.models.load_model("model.h5")
-                inputGerman = request.form['input']
-                tk2 = create_tokenizer(inputGerman)
-                inputGerman = inputGerman.split(" ")
-                predicted = str()
-                for text in inputGerman:
-                    tk = create_tokenizer(text)
-                    source = encode_sequences(tk, ger_length, text)
-                    temp = predict_sequence(model, eng_tokenizer, source) + ' '
-                    # predicted.append(temp)
-                    predicted = predicted + temp + ' '
-                    predicted = predicted[:-1]
-
-                predicted_stock_price = predicted
-
-        #
-        return render_template('resultsform.html', german=inputGerman, predicted_price=predicted_stock_price)
+    # return render_template('try.html')
+    return "hello"
 
 
 @app.route('/translate', methods=['POST'])
 def translate():
-    # print(request.form['input'])
-    # return {'message': 'fail to request'}, 200
-    print('\n**************************\n')
-    print(request.json.get('input'))
-    print('\n**************************\n')
     if request.method == 'POST':
-        with sess.as_default():
-            with graph.as_default():
-                model = tf.keras.models.load_model("model.h5")
-                inputGerman = request.json.get('input')
-                print(inputGerman)
-                tk2 = create_tokenizer(inputGerman)
-                inputGerman = inputGerman.split(" ")
-                predicted = str()
-                for text in inputGerman:
-                    tk = create_tokenizer(text)
-                    source = encode_sequences(tk, ger_length, text)
-                    temp = predict_sequence(model, eng_tokenizer, source) + ' '
-                    predicted = predicted + temp + ' '
+        if request.json.get('input') == '':
+            return jsonify({'message': 'input is null'}), 400
+        else:
+            with sess.as_default():
+                with graph.as_default():
+                    model = tf.keras.models.load_model("model.h5")
+                    inputGerman = request.json.get('input')
+                    print(inputGerman)
+                    tk2 = create_tokenizer(inputGerman)
+                    inputGerman = inputGerman.split(" ")
+                    predicted = str()
+                    for text in inputGerman:
+                        tk = create_tokenizer(text)
+                        source = encode_sequences(tk, ger_length, text)
+                        temp = predict_sequence(
+                            model, eng_tokenizer, source) + ' '
+                        predicted = predicted + temp + ' '
 
-                predicted = predicted[:-1]
-                predicted_stock_price = predicted
+                    predicted = predicted[:-1]
+                    predicted_stock_price = predicted
 
         return jsonify({'output': predicted}), 200
 
