@@ -69,7 +69,7 @@ class Main extends React.Component {
   render() {
     return (
       <>
-        <div className="col-xl-10 container">
+        <div className="col-xl-10 container" style={{marginTop:'20px'}}>
           <div>
             <div className="text-center">
               <h1>Demo Mô Hình Dịch Máy Từ Tiếng Anh Sang Tiếng Việt</h1>
