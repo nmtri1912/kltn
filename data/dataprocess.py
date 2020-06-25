@@ -13,6 +13,7 @@ def detachStr(ip):
     ip = ip.replace(':', '.')
     ip = ip.replace('‘', '\'')
     ip = ip.replace('’', '\'')
+    ip = ip.replace('"', '')
 
     inputArray = []
     index = 0
@@ -81,6 +82,7 @@ en_fb.close()
 vn_fb.close()
 print(len(ipenArr))
 print(len(ipvnArr))
+
 """
 en_fb = open('en.txt', 'r', encoding='utf-8')
 vn_fb = open('vn.txt', 'r', encoding='utf-8')
