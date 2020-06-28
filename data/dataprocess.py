@@ -1,6 +1,62 @@
 import re
 
+f = open('en.txt', 'r', encoding='utf-8')
 
+inp = f.read().splitlines()
+
+f.close()
+
+i = 0
+
+while True:
+    if(i >= len(inp)):
+        break
+    inp[i] = inp[i].strip()
+    if(inp[i] == '' or inp[i] == ' '):
+        del inp[i]
+        continue
+
+    elif(len(inp[i]) > 2):
+        if(inp[i][0:2] == '>>'):
+            del inp[i]
+            continue
+    i += 1
+
+
+fe = open('newEn.txt', 'w', encoding='utf-8')
+fv = open('newVn.txt', 'w', encoding='utf-8')
+
+lenght = 0
+
+for i in range(len(inp)):
+    temp = inp[i].split('. ')
+    for h in range(len(temp)):
+        temp[h].strip()
+        temp[h] = temp[h].replace('…', '.')
+        temp[h] = temp[h].replace('  ', '')
+        temp[h] = temp[h].replace('“', '"')
+        temp[h] = temp[h].replace('”', '"')
+        temp[h] = temp[h].replace(';', '.')
+        temp[h] = temp[h].replace(':', '.')
+        temp[h] = temp[h].replace('‘', '\'')
+        temp[h] = temp[h].replace('’', '\'')
+        temp[h] = temp[h].replace('"', '')
+        if(temp[h][-1] != '.' and temp[h][-1] != '!' and temp[h][-1] != '?'):
+            temp[h] = temp[h] + '.\n'
+            lenght += 1
+        else:
+            temp[h] = temp[h] + '\n'
+            lenght += 1
+    if(i % 2 == 0):
+        fv.writelines(temp)
+    else:
+        fe.writelines(temp)
+
+print(lenght)
+fe.close()
+fv.close()
+
+"""
 def detachStr(ip):
     # ip = re.sub('"()', '.', ip)
 
@@ -82,6 +138,8 @@ en_fb.close()
 vn_fb.close()
 print(len(ipenArr))
 print(len(ipvnArr))
+
+"""
 
 """
 en_fb = open('en.txt', 'r', encoding='utf-8')
