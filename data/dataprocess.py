@@ -29,18 +29,19 @@ fv = open('newVn.txt', 'w', encoding='utf-8')
 lenght = 0
 
 for i in range(len(inp)):
+    inp[i] = inp[i].strip()
+    inp[i] = inp[i].replace('…', '.')
+    inp[i] = inp[i].replace('  ', '')
+    inp[i] = inp[i].replace('“', '"')
+    inp[i] = inp[i].replace('”', '"')
+    inp[i] = inp[i].replace(';', '.')
+    inp[i] = inp[i].replace(':', '.')
+    inp[i] = inp[i].replace('‘', '\'')
+    inp[i] = inp[i].replace('’', '\'')
+    inp[i] = inp[i].replace('"', '')
+    inp[i] = inp[i].strip()
     temp = inp[i].split('. ')
     for h in range(len(temp)):
-        temp[h].strip()
-        temp[h] = temp[h].replace('…', '.')
-        temp[h] = temp[h].replace('  ', '')
-        temp[h] = temp[h].replace('“', '"')
-        temp[h] = temp[h].replace('”', '"')
-        temp[h] = temp[h].replace(';', '.')
-        temp[h] = temp[h].replace(':', '.')
-        temp[h] = temp[h].replace('‘', '\'')
-        temp[h] = temp[h].replace('’', '\'')
-        temp[h] = temp[h].replace('"', '')
         if(temp[h][-1] != '.' and temp[h][-1] != '!' and temp[h][-1] != '?'):
             temp[h] = temp[h] + '.\n'
             lenght += 1
