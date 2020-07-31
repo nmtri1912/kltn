@@ -1,5 +1,114 @@
 import re
+from nltk import sent_tokenize
+from nltk import word_tokenize
 
+f = open('en.txt', 'r', encoding='utf-8')
+
+inp = list(filter(None, f.read().splitlines()))
+
+lenInp = 0
+while (True):
+    if(lenInp >= len(inp)):
+        break
+    if(inp[lenInp] == 'report_problem'):
+        del(inp[lenInp])
+        continue
+    lenInp += 1
+
+
+def pre(w):
+
+    decimal = re.findall(r'\d+[.,\s]\d+', w)
+    for i in decimal:
+        w = w.replace(i, (re.sub(r'[,.]', "", i)))
+
+    w = w.lower()
+    w = re.sub(r'^.{1}\.[\s]*', "", w)
+    w = re.sub(r'\s?[^\s]*\.com', "", w)
+    w = re.sub(r'[\[\](.*[\)\]]|…', "", w)
+    #w = re.sub(r'\(.*?\)|…', "", w)
+    w = re.sub(r'n’t|n\'t', " not ", w)
+    w = re.sub(r'%', " percent ", w)
+    w = re.sub(r'.*\:', "", w)
+    w = re.sub(r"([?.!,¿])", r" \1 ", w)
+    w = re.sub(r"[:;]", ".", w)
+    w = re.sub(r"'re", " are ", w)
+    w = re.sub(r"'ve|’ve", " have ", w)
+    w = re.sub(r"’[\s]*re", " are ", w)
+    w = re.sub(r"'ll ", " will ", w)
+    w = re.sub(r"’ll ", " will ", w)
+    w = re.sub(r"'m|’m", " am ", w)
+    w = re.sub(r"[“”’‘']", "", w)
+    w = re.sub(r"[^a-zA-Z0-9?.!,¿]+", " ", w)
+    w = re.sub(r" d ", "d ", w)
+    w = re.sub(r" s ", "s ", w)
+    w = re.sub(r" t ", "t ", w)
+    w = re.sub(r'', "", w)
+    w = re.sub(r'[" "]+', " ", w)
+    w = w.strip()
+    return w
+
+
+def preVn(w):
+    w = w.lower()
+    decimal = re.findall(r'\d+[.,\s]\d+', w)
+    for i in decimal:
+        w = w.replace(i, (re.sub(r'[,.]', "", i)))
+    w = re.sub(r'^.{1}\.[\s]*', "", w)
+    w = re.sub(r'\s?[^\s]*\.com', "", w)
+    w = re.sub(r'/', " ", w)
+    w = re.sub(r'[\[\](.*[\)\]]|…', "", w)
+    #w = re.sub(r'\(.*?\)|…', "", w)
+    w = re.sub(r'%', " phần trăm ", w)
+    w = re.sub(r'.*\:', "", w)
+    w = re.sub(r"[:;]", ".", w)
+    w = re.sub(r"([?.!,¿])", r" \1 ", w)
+    w = re.sub(r"[“”’‘•']", "", w)
+    w = re.sub(r"[–-]+", " , ", w)
+    w = re.sub(r'[" "]+', " ", w)
+    w = w.strip()
+    return w
+
+
+fe = open('newEn.txt', 'w', encoding='utf-8')
+fv = open('newVn.txt', 'w', encoding='utf-8')
+
+f.close()
+enOutput = []
+vnOutput = []
+for i in range(len(inp)):
+    if(i % 2 == 0):
+        inp[i] = pre(inp[i])
+        enOutput.append(sent_tokenize(
+            ' '.join(word_tokenize(inp[i], 'english'))))
+    else:
+        inp[i] = preVn(inp[i])
+        vnOutput.append(sent_tokenize(
+            ' '.join(word_tokenize(inp[i]))))
+
+for i in enOutput:
+    for j in i:
+        j = j.strip()
+        if(len(j) < 5):
+            continue
+        if(j[-1] != '.' and j[-1] != '!' and j[-1] != '?'):
+            fe.write(j + ' .\n')
+        else:
+            fe.write(j + '\n')
+
+for i in vnOutput:
+    for j in i:
+        j = j.strip()
+        if(len(j) < 5):
+            continue
+        if(j[-1] != '.' and j[-1] != '!' and j[-1] != '?'):
+            fv.write(j + ' .\n')
+        else:
+            fv.write(j + '\n')
+
+fe.close()
+fv.close()
+"""
 f = open('en.txt', 'r', encoding='utf-8')
 
 inp = f.read().splitlines()
@@ -35,10 +144,11 @@ for i in range(len(inp)):
     inp[i] = inp[i].replace('“', '"')
     inp[i] = inp[i].replace('”', '"')
     inp[i] = inp[i].replace(';', '.')
-    inp[i] = inp[i].replace(':', '.')
+    inp[i] = inp[i].replace(':', ',')
     inp[i] = inp[i].replace('‘', '\'')
     inp[i] = inp[i].replace('’', '\'')
     inp[i] = inp[i].replace('"', '')
+    inp[i] = inp[i].replace('\\', '')
     inp[i] = inp[i].strip()
     temp = inp[i].split('. ')
     for h in range(len(temp)):
@@ -58,6 +168,9 @@ fe.close()
 fv.close()
 
 """
+
+'''
+
 def detachStr(ip):
     # ip = re.sub('"()', '.', ip)
 
@@ -71,6 +184,7 @@ def detachStr(ip):
     ip = ip.replace('‘', '\'')
     ip = ip.replace('’', '\'')
     ip = ip.replace('"', '')
+    ip = ip.replace(' *** ', ' ')
 
     inputArray = []
     index = 0
@@ -120,6 +234,21 @@ en_fb.close()
 ipen = ''
 ipvn = ''
 
+for i in range(len(en_arr)):
+    en_arr[i] = re.sub('\n', '', en_arr[i])
+    en_arr[i] = en_arr[i].strip()
+    if(len(en_arr[i]) > 0):
+        if(en_arr[i][-1] != '.'and en_arr[i][-1] != '?'and en_arr[i][-1] != '!'and en_arr[i][-1] != '.' and en_arr[i][-1] != ';'):
+            en_arr[i] = en_arr[i] + '.'
+
+for i in range(len(vn_arr)):
+    vn_arr[i] = re.sub('\n', '', vn_arr[i])
+    vn_arr[i] = vn_arr[i].strip()
+    if(len(vn_arr[i]) > 0):
+        if(vn_arr[i][-1] != '.'and vn_arr[i][-1] != '?'and vn_arr[i][-1] != '!'and vn_arr[i][-1] != '.' and vn_arr[i][-1] != ';'):
+            vn_arr[i] = vn_arr[i] + '.'
+
+
 ipen = ipen.join(en_arr)
 ipenArr = detachStr(ipen)
 
@@ -130,18 +259,28 @@ en_fb = open('newEn.txt', 'w', encoding='utf-8')
 vn_fb = open('newVn.txt', 'w', encoding='utf-8')
 
 for i in ipenArr:
-    en_fb.write(i + '\n')
+    if(len(i) < 2):
+        continue
+    if(i[-1] != '.' and i[-1] != '?'and i[-1] != '!'and i[-1] != '.' and i[-1] != ';'):
+        en_fb.write(i + '.\n')
+    else:
+        en_fb.write(i + '\n')
+
 
 for i in ipvnArr:
-    vn_fb.write(i + '\n')
+    if(len(i) < 2):
+        continue
+    if(i[-1] != '.'and i[-1] != '?'and i[-1] != '!'and i[-1] != '.' and i[-1] != ';'):
+        vn_fb.write(i + '\n')
+    else:
+        vn_fb.write(i + '\n')
 
 en_fb.close()
 vn_fb.close()
 print(len(ipenArr))
 print(len(ipvnArr))
 
-"""
-
+'''
 """
 en_fb = open('en.txt', 'r', encoding='utf-8')
 vn_fb = open('vn.txt', 'r', encoding='utf-8')
