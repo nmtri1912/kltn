@@ -1,2 +1,1 @@
-# KLTN
-Khoá luận tốt nghiệp
+# Thesis
